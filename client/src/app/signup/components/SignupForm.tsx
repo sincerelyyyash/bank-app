@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
-import {baseUrl} from "../../../constants/index"
+import { baseUrl } from "../../../constants/index";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { cn } from "@/utils/cn";
@@ -43,25 +43,32 @@ const SignupForm = () => {
 
       if (response.status === 200) {
         setSuccess("Account created successfully!");
-        setError("");
+        setError(null);
       }
-
-      const data = response.data;
-
-      setSuccess("Account created successfully!");
-      setError(null);
     } catch (error) {
-      setError("Failed to create account. Please try again.");
-      setSuccess("");
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+
+        if (errorMessage === "Email already exists") {
+          setError("This email is already in use. Please try another.");
+        } else if (errorMessage === "Username already taken") {
+          setError("This username is already taken. Please choose another.");
+        } else {
+          setError(errorMessage || "Failed to create account. Please try again.");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+      setSuccess(null);
     }
   };
 
   const handleSignIn = () => {
-    router.push("/signin"); // Navigate to the /signin page when "Sign in" button is clicked
+    router.push("/signin");
   };
 
   return (
-    <div className="h-screen bg-black pt-60" >
+    <div className="h-screen bg-black pt-60">
       <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-stone-200 bg-black">
         <h2 className="font-bold text-2xl text-black">
           Create an account with us!
@@ -73,10 +80,10 @@ const SignupForm = () => {
         <form className="my-8" onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
-              <Label htmlFor="firstname">Full name</Label>
+              <Label htmlFor="fullname">Full name</Label>
               <Input
                 id="fullname"
-                placeholder="Tyler"
+                placeholder="Tyler Smith"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -89,7 +96,7 @@ const SignupForm = () => {
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
-                placeholder="Tyler/"
+                placeholder="Tyler001"
                 type="text"
                 name="username"
                 value={formData.username}
@@ -134,8 +141,8 @@ const SignupForm = () => {
           </button>
           <button
             className="mt-4 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="button" // Change this to "button" to prevent form submission
-            onClick={handleSignIn} // Call the handleSignIn function on click
+            type="button"
+            onClick={handleSignIn}
           >
             Sign in &rarr;
             <BottomGradient />
