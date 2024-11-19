@@ -30,26 +30,26 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
 
 const Accordion: React.FC = () => {
   return (
-    <div className="h-screen bg-gray-100">
-      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-36">
+    <div className="h-screen">
+      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-[30rem] md:pt-36">
         FAQs
       </h1>
-      <div className="w-full mt-24 max-w-6xl mx-auto">
+      <div className="w-full p-10 md:p-0 md:mt-24 max-w-6xl mx-auto">
         <AccordionItem
           title="What types of accounts can I open with your bank?"
-          content="We offer savings accounts."
+          content="We offer Savings account."
         />
         <AccordionItem
           title="How do I check my account balance?"
-          content="You can check your account balance via online banking."
+          content="You can check your account balance after you Signin."
         />
         <AccordionItem
           title="How do I change my account details?"
-          content="You can update your details through online banking."
+          content="You can update your details after you Signin."
         />
         <AccordionItem
           title="How do I reset my online banking password?"
-          content="You can reset your password by clicking on the “Forgot Password” link on the login page."
+          content="SignIn &rarr; Click on '+' icon &rarr; Update Password."
         />
         <AccordionItem
           title="Is banking secure?"

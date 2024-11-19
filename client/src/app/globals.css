@@ -23,10 +23,18 @@ body {
 
 .inria-sans-bold {
   font-family: "Inria Sans", sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   font-style: normal;
 }
 
+.bg-image {
+  background-image: url("../public/background1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 85%;
+  filter: grayscale(80%);
+}
 
 @layer utilities {
   .text-balance {

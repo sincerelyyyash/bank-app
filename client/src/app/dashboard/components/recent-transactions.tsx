@@ -1,45 +1,66 @@
-export function RecentTransactions() {
+import React from "react";
+
+interface Transfer {
+  id: string;
+  amount: number;
+  description: string;
+  timestamp: string;
+  status: string;
+}
+
+interface RecentTransactionsProps {
+  transactions: Transfer[];
+}
+
+const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+  // Sort transactions by timestamp in descending order and take the first 5
+  const recentTransactions = transactions
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 5);
+
   return (
-    <div className="space-y-8">
-      <div className="flex items-center">
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Olivia Martin</p>
-          <p className="text-sm text-muted-foreground">
-            olivia.martin@email.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+$1,999.00</div>
-      </div>
-      <div className="flex items-center">
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Jackson Lee</p>
-          <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
-      <div className="flex items-center">
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
-          <p className="text-sm text-muted-foreground">
-            isabella.nguyen@email.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+$299.00</div>
-      </div>
-      <div className="flex items-center">
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">William Kim</p>
-          <p className="text-sm text-muted-foreground">will@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$99.00</div>
-      </div>
-      <div className="flex items-center">
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Sofia Davis</p>
-          <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-white text-sm">
+        <thead>
+          <tr className="bg-zinc-900 text-left">
+            <th className="px-4 py-4">ID</th>
+            <th className="px-4 py-4">Amount</th>
+            <th className="px-4 py-4">Date/Time</th>
+            <th className="px-4 py-4">Description</th>
+            <th className="px-4 py-4">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {recentTransactions.map((transaction) => (
+            <tr key={transaction.id} className="hover:bg-gray-800">
+              <td className="px-4 py-4">{transaction.id}</td>
+              <td className="px-4 py-4">₹{transaction.amount.toFixed(2)}</td>
+              <td className="px-4 py-4">
+                {new Date(transaction.timestamp).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                })}
+              </td>
+              <td className="px-4 py-4">{transaction.description}</td>
+              <td className="px-4 py-4">{transaction.status}</td>
+            </tr>
+          ))}
+          {recentTransactions.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-center py-4">
+                No recent transactions.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+export default RecentTransactions;
