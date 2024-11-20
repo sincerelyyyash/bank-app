@@ -1,6 +1,6 @@
 "use client";
+
 import axiosClient from "@/constants/axiosClient";
-import axios from "axios";
 import { baseUrl } from "../../../constants/index";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { Input } from "../../../components/ui/input";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import overview from "@/public/overview.png";
+import axios from "axios";
 
 interface SignupForm {
   name: string;
@@ -30,20 +31,42 @@ const SignupForm = () => {
 
   const router = useRouter();
 
+  // Input change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Client-side validation
+  const validateForm = () => {
+    const { name, username, email, password } = formData;
+    if (!name || !username || !email || !password) {
+      return "All fields are required.";
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    return null;
+  };
+
+  // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
     try {
-      const response = await axiosClient.post(baseUrl + "/user/signin", formData);
+      const response = await axiosClient.post(baseUrl + "/user/signup", formData);
 
       if (response.status === 200) {
         setSuccess("Account created successfully!");
         setError(null);
-        const accessToken = response.data?.data.accessToken;
+        const accessToken = response.data?.data?.accessToken;
         localStorage.setItem("accessToken", accessToken);
         router.push("/dashboard");
       }
@@ -58,6 +81,7 @@ const SignupForm = () => {
     }
   };
 
+  // Navigate to sign-in
   const handleSignIn = () => {
     router.push("/signin");
   };
@@ -77,10 +101,10 @@ const SignupForm = () => {
           <form className="w-full space-y-4" onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
               <LabelInputContainer>
-                <Label htmlFor="fullname">Full name</Label>
+                <Label htmlFor="fullname">Full Name</Label>
                 <Input
                   id="fullname"
-                  placeholder="Tyler Smith"
+                  placeholder="Enter your full name"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -93,7 +117,7 @@ const SignupForm = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Tyler001"
+                  placeholder="Enter your username"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -103,11 +127,11 @@ const SignupForm = () => {
               </LabelInputContainer>
             </div>
 
-            <LabelInputContainer className="mb-4">
+            <LabelInputContainer>
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
-                placeholder="projectmayhem@fc.com"
+                placeholder="Enter your email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -116,11 +140,11 @@ const SignupForm = () => {
               />
             </LabelInputContainer>
 
-            <LabelInputContainer className="mb-4">
+            <LabelInputContainer>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 type="password"
                 name="password"
                 value={formData.password}
@@ -130,11 +154,10 @@ const SignupForm = () => {
             </LabelInputContainer>
 
             <button
-              className="bg-gradient-to-br relative group from-black to-neutral-600 w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200"
+              className="bg-gradient-to-br from-black to-neutral-600 w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200"
               type="submit"
             >
-              Sign up &rarr;
-              <BottomGradient />
+              Sign Up &rarr;
             </button>
 
             <div className="flex justify-center items-center mt-4 space-x-1">
@@ -144,8 +167,7 @@ const SignupForm = () => {
                 type="button"
                 onClick={handleSignIn}
               >
-                Sign in
-                <BottomGradient />
+                Sign In
               </button>
             </div>
           </form>
@@ -155,7 +177,7 @@ const SignupForm = () => {
         <div className="hidden md:flex w-full md:w-1/2 items-center justify-center p-8">
           <Image
             src={overview}
-            alt="overview dashboard"
+            alt="Overview dashboard"
             className="object-cover w-full h-full rounded-r-2xl"
           />
         </div>
@@ -165,13 +187,6 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
-
-const BottomGradient = () => (
-  <>
-    <span className="group-hover:opacity-100 block transition-opacity duration-500 opacity-0 absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-    <span className="group-hover:opacity-100 block transition-opacity duration-500 opacity-0 absolute inset-x-10 bottom-0 h-px w-1/2 mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent blur-sm" />
-  </>
-);
 
 const LabelInputContainer = ({
   children,
