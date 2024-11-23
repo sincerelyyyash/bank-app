@@ -4,6 +4,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inria+Sans&family=Vast+Shadow&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   color: var(--background);
   background: var(--foreground);
@@ -11,7 +15,7 @@ body {
 
 .vast-shadow-regular {
   font-family: "Vast Shadow", serif;
-  font-weight: 400;
+  font-weight: 800;
   font-style: normal;
 }
 
@@ -35,6 +39,26 @@ body {
   opacity: 85%;
   filter: grayscale(80%);
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f4f4;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 
 @layer utilities {
   .text-balance {
